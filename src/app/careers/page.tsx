@@ -44,8 +44,7 @@ const openPositions = [
 const benefits = [
     { icon: '🌍', title: 'Remote First', desc: 'Work from anywhere in the world' },
     { icon: '📚', title: 'Learning Budget', desc: '₹50k/year for courses and books' },
-    {
-        icon: '⏰', title: 'Flexible Hours', desc: 'Work when you're most productive' },
+    { icon: '⏰', title: 'Flexible Hours', desc: 'Work when you are most productive' },
     { icon: '💰', title: 'Competitive Pay', desc: 'Salary + equity options' },
     { icon: '🏥', title: 'Health Insurance', desc: 'Coverage for you and family' },
     { icon: '🎯', title: 'Mission-Driven', desc: 'Work that matters' },
