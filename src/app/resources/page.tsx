@@ -42,7 +42,7 @@ async function getPopularTags() {
     if (!data) return [];
 
     const tagCounts: Record<string, number> = {};
-    data.forEach((r) => {
+    data.forEach((r: any) => {
         (r.tags || []).forEach((tag: string) => {
             tagCounts[tag] = (tagCounts[tag] || 0) + 1;
         });
@@ -106,7 +106,7 @@ export default async function ResourcesPage({
                     <div className="flex-1">
                         {resources.length > 0 ? (
                             <div className="grid gap-4">
-                                {resources.map((resource) => (
+                                {resources.map((resource: any) => (
                                     <ResourceCard key={resource.id} resource={resource} />
                                 ))}
                             </div>
@@ -164,8 +164,8 @@ function FilterButton({
         <Link
             href={href}
             className={`px-4 py-2 rounded-md text-sm transition-colors ${active
-                    ? 'bg-cyan text-charcoal'
-                    : 'bg-slate/50 text-warm-gray hover:text-off-white'
+                ? 'bg-cyan text-charcoal'
+                : 'bg-slate/50 text-warm-gray hover:text-off-white'
                 }`}
         >
             {label}
