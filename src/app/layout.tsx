@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { Providers } from '@/components/Providers';
 import { createClient, isMockMode } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
@@ -92,11 +94,15 @@ export default async function RootLayout({
                     <div className="floating-orb w-72 h-72 bg-purple/10" style={{ top: '30%', right: '30%', animationDelay: '-10s' }} />
                 </div>
 
-                <div className="relative z-10 flex min-h-screen flex-col">
-                    <Header user={user} />
-                    <main className="flex-1 pt-16">{children}</main>
-                </div>
+                <Providers>
+                    <div className="relative z-10 flex min-h-screen flex-col">
+                        <Header user={user} />
+                        <main className="flex-1 pt-16">{children}</main>
+                        <Footer />
+                    </div>
+                </Providers>
             </body>
         </html>
     );
 }
+

@@ -60,9 +60,28 @@ export default function Header({ user }: HeaderProps) {
 
                 {/* Right side actions */}
                 <div className="flex items-center gap-3">
-                    {/* Search button */}
+                    {/* Search button - triggers Command Palette */}
                     <button
-                        className="p-2 rounded-lg text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                        onClick={() => {
+                            const event = new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true });
+                            document.dispatchEvent(event);
+                        }}
+                        className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate/30 text-muted-text hover:text-off-white hover:bg-slate/50 transition-all text-sm"
+                        aria-label="Search"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <span>Search</span>
+                        <kbd className="hidden lg:inline px-1.5 py-0.5 text-xs bg-charcoal rounded ml-2">⌘K</kbd>
+                    </button>
+                    {/* Mobile search */}
+                    <button
+                        onClick={() => {
+                            const event = new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true });
+                            document.dispatchEvent(event);
+                        }}
+                        className="sm:hidden p-2 rounded-lg text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
                         aria-label="Search"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
