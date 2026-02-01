@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch replies for each comment
-    const commentIds = comments.map((c) => c.id);
+    const commentIds = comments?.map((c: any) => c.id) || [];
     const { data: replies } = await supabase
         .from('comments')
         .select(`
@@ -49,9 +49,9 @@ export async function GET(request: NextRequest) {
         .order('created_at', { ascending: true });
 
     // Attach replies to their parent comments
-    const commentsWithReplies = comments.map((comment) => ({
+    const commentsWithReplies = (comments || []).map((comment: any) => ({
         ...comment,
-        replies: (replies || []).filter((r) => r.parent_id === comment.id),
+        replies: (replies || []).filter((r: any) => r.parent_id === comment.id),
     }));
 
     return NextResponse.json({ data: commentsWithReplies });

@@ -1,0 +1,22 @@
+
+> cyberodyssey@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.0
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/app/api/comments/route.ts:41:38
+Type error: Parameter 'c' implicitly has an 'any' type.
+
+[0m [90m 39 |[39m[0m
+[0m [90m 40 |[39m     [90m// Fetch replies for each comment[39m[0m
+[0m[31m[1m>[22m[39m[90m 41 |[39m     [36mconst[39m commentIds [33m=[39m comments[33m.[39mmap((c) [33m=>[39m c[33m.[39mid)[33m;[39m[0m
+[0m [90m    |[39m                                      [31m[1m^[22m[39m[0m
+[0m [90m 42 |[39m     [36mconst[39m { data[33m:[39m replies } [33m=[39m [36mawait[39m supabase[0m
+[0m [90m 43 |[39m         [33m.[39m[36mfrom[39m([32m'comments'[39m)[0m
+[0m [90m 44 |[39m         [33m.[39mselect([32m`[39m[0m
