@@ -48,8 +48,8 @@ export default function Header({ user }: HeaderProps) {
                             key={item.name}
                             href={item.href}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive(item.href)
-                                    ? 'text-cyan bg-cyan/10'
-                                    : 'text-warm-gray hover:text-off-white hover:bg-white/5'
+                                ? 'text-cyan bg-cyan/10'
+                                : 'text-warm-gray hover:text-off-white hover:bg-white/5'
                                 }`}
                         >
                             <span>{item.icon}</span>
@@ -191,32 +191,107 @@ export default function Header({ user }: HeaderProps) {
 
             {/* Mobile menu */}
             {mobileMenuOpen && (
-                <div className="md:hidden mt-4 py-4 border-t border-slate/30">
+                <div className="md:hidden mt-4 py-4 border-t border-slate/30 max-h-[70vh] overflow-y-auto">
                     <nav className="flex flex-col gap-1">
+                        {/* Main Navigation */}
+                        <p className="px-4 py-1 text-xs text-muted-text uppercase tracking-wider">Explore</p>
                         {navigation.map((item) => (
                             <Link
                                 key={item.name}
                                 href={item.href}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className={`px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-all ${isActive(item.href)
-                                        ? 'text-cyan bg-cyan/10'
-                                        : 'text-warm-gray hover:text-off-white hover:bg-white/5'
+                                    ? 'text-cyan bg-cyan/10'
+                                    : 'text-warm-gray hover:text-off-white hover:bg-white/5'
                                     }`}
                             >
                                 <span className="text-lg">{item.icon}</span>
                                 {item.name}
                             </Link>
                         ))}
+                        <Link
+                            href="/failure-logs"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className={`px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-all ${isActive('/failure-logs')
+                                ? 'text-cyan bg-cyan/10'
+                                : 'text-warm-gray hover:text-off-white hover:bg-white/5'
+                                }`}
+                        >
+                            <span className="text-lg">📝</span>
+                            Failure Logs
+                        </Link>
+
+                        {/* Community */}
+                        <p className="px-4 py-1 mt-3 text-xs text-muted-text uppercase tracking-wider">Community</p>
+                        <Link
+                            href="/community"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                        >
+                            <span className="text-lg">👥</span>
+                            Community
+                        </Link>
+                        <Link
+                            href="/leaderboard"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                        >
+                            <span className="text-lg">🏆</span>
+                            Leaderboard
+                        </Link>
+
+                        {/* Research & Resources */}
+                        <p className="px-4 py-1 mt-3 text-xs text-muted-text uppercase tracking-wider">Learn</p>
+                        <Link
+                            href="/research"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                        >
+                            <span className="text-lg">📄</span>
+                            Research Papers
+                        </Link>
+
+                        {/* Create */}
                         {user && (
-                            <Link
-                                href="/new/project"
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-cyan bg-cyan/10"
-                            >
-                                <span className="text-lg">➕</span>
-                                Create Project
-                            </Link>
+                            <>
+                                <p className="px-4 py-1 mt-3 text-xs text-muted-text uppercase tracking-wider">Create</p>
+                                <Link
+                                    href="/new/project"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-cyan bg-cyan/10"
+                                >
+                                    <span className="text-lg">➕</span>
+                                    New Project
+                                </Link>
+                                <Link
+                                    href="/new/failure-log"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warning bg-warning/10"
+                                >
+                                    <span className="text-lg">✍️</span>
+                                    Log Failure
+                                </Link>
+                            </>
                         )}
+
+                        {/* About */}
+                        <p className="px-4 py-1 mt-3 text-xs text-muted-text uppercase tracking-wider">About</p>
+                        <Link
+                            href="/vision"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                        >
+                            <span className="text-lg">🎯</span>
+                            Our Vision
+                        </Link>
+                        <Link
+                            href="/donate"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                        >
+                            <span className="text-lg">💝</span>
+                            Support Us
+                        </Link>
                     </nav>
                 </div>
             )}

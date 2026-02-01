@@ -172,9 +172,22 @@ export default async function ProfilePage({ params }: PageProps) {
                                 <p className="text-muted-text mb-2">@{profile.username}</p>
                             )}
 
-                            {profile.bio && (
+                            {profile.bio ? (
                                 <p className="text-warm-gray mb-4">{profile.bio}</p>
+                            ) : (
+                                <p className="text-muted-text mb-4 italic">No bio yet</p>
                             )}
+
+                            {/* Edit Profile Button */}
+                            <Link
+                                href="/profile/edit"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate/50 text-warm-gray hover:text-off-white hover:bg-cyan/10 transition-colors text-sm mb-4"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                                Edit Profile
+                            </Link>
 
                             {/* Links */}
                             <div className="flex flex-wrap gap-4 text-sm">
