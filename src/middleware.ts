@@ -1,8 +1,21 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// Check if Supabase is configured
+const isMockMode = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co';
+
 // Middleware for handling auth session refresh
 export async function updateSession(request: NextRequest) {
+    // Skip Supabase in mock mode
+    if (isMockMode) {
+        return NextResponse.next({
+            request: {
+                headers: request.headers,
+            },
+        });
+    }
+
     let response = NextResponse.next({
         request: {
             headers: request.headers,
@@ -40,7 +53,11 @@ export async function updateSession(request: NextRequest) {
     );
 
     // Refresh the session
-    await supabase.auth.getUser();
+    try {
+        await supabase.auth.getUser();
+    } catch (error) {
+        console.error('Middleware auth error:', error);
+    }
 
     return response;
 }
@@ -48,7 +65,7 @@ export async function updateSession(request: NextRequest) {
 // Protected routes that require authentication
 const protectedRoutes = [
     '/new',
-    '/profile',
+    '/profile/edit',
     '/mentor/apply',
     '/admin',
 ];
@@ -59,6 +76,11 @@ const adminRoutes = [
 ];
 
 export async function middleware(request: NextRequest) {
+    // Skip middleware processing in mock mode
+    if (isMockMode) {
+        return NextResponse.next();
+    }
+
     const response = await updateSession(request);
 
     const pathname = request.nextUrl.pathname;
@@ -69,43 +91,48 @@ export async function middleware(request: NextRequest) {
     );
 
     if (isProtectedRoute) {
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                cookies: {
-                    get(name: string) {
-                        return request.cookies.get(name)?.value;
+        try {
+            const supabase = createServerClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                {
+                    cookies: {
+                        get(name: string) {
+                            return request.cookies.get(name)?.value;
+                        },
+                        set() { },
+                        remove() { },
                     },
-                    set() { },
-                    remove() { },
-                },
+                }
+            );
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (!user) {
+                const loginUrl = new URL('/auth/login', request.url);
+                loginUrl.searchParams.set('redirect', pathname);
+                return NextResponse.redirect(loginUrl);
             }
-        );
 
-        const { data: { user } } = await supabase.auth.getUser();
+            // Check admin routes
+            const isAdminRoute = adminRoutes.some(route =>
+                pathname.startsWith(route)
+            );
 
-        if (!user) {
-            const loginUrl = new URL('/auth/login', request.url);
-            loginUrl.searchParams.set('redirect', pathname);
-            return NextResponse.redirect(loginUrl);
-        }
+            if (isAdminRoute) {
+                const { data: userData } = await supabase
+                    .from('users')
+                    .select('role')
+                    .eq('id', user.id)
+                    .single();
 
-        // Check admin routes
-        const isAdminRoute = adminRoutes.some(route =>
-            pathname.startsWith(route)
-        );
-
-        if (isAdminRoute) {
-            const { data: userData } = await supabase
-                .from('users')
-                .select('role')
-                .eq('id', user.id)
-                .single();
-
-            if (userData?.role !== 'admin') {
-                return NextResponse.redirect(new URL('/', request.url));
+                if (userData?.role !== 'admin') {
+                    return NextResponse.redirect(new URL('/', request.url));
+                }
             }
+        } catch (error) {
+            console.error('Middleware protection error:', error);
+            // Allow request to continue on error
         }
     }
 
@@ -117,3 +144,4 @@ export const config = {
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 };
+
