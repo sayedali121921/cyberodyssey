@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 interface FailureLogListProps {
     initialLogs: any[];
@@ -11,7 +12,19 @@ interface FailureLogListProps {
 
 export default function FailureLogList({ initialLogs, currentUserId }: FailureLogListProps) {
     const [logs, setLogs] = useState(initialLogs);
+    const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
+
+    // Check for admin role on mount
+    useEffect(() => {
+        async function checkRole() {
+            if (!currentUserId) return;
+            const supabase = createClient();
+            const { data } = await supabase.from('users').select('role').eq('id', currentUserId).single();
+            if (data?.role === 'admin') setIsAdmin(true);
+        }
+        checkRole();
+    }, [currentUserId]);
 
     async function handleDelete(logId: string) {
         if (!confirm('Are you sure you want to delete this failure log?')) return;
@@ -80,8 +93,8 @@ export default function FailureLogList({ initialLogs, currentUserId }: FailureLo
                                     </span>
                                 </div>
 
-                                {/* Only show delete button for owner */}
-                                {currentUserId === log.user_id && (
+                                {/* Only show delete button for owner or admin */}
+                                {(currentUserId === log.user_id || isAdmin) && (
                                     <button
                                         onClick={() => handleDelete(log.id)}
                                         className="text-xs text-error hover:text-red-400 opacity-50 hover:opacity-100 transition-opacity"

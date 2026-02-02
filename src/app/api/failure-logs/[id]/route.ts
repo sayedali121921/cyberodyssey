@@ -19,16 +19,24 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // specific check: make sure the log belongs to the user
-    // We can do this in the delete query directly by adding .eq('user_id', user.id)
-    // but a two-step check is often clearer for error messages.
-    // For efficiency, we will trust RLS if enabled, but explict checking is safer for APIs.
+    // 2. Check Role
+    const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
 
-    const { error } = await supabase
-        .from('failure_logs')
-        .delete()
-        .eq('id', logId)
-        .eq('user_id', user.id); // Validating ownership
+    const isAdmin = userData?.role === 'admin';
+
+    // 3. Delete
+    let query = supabase.from('failure_logs').delete().eq('id', logId);
+
+    // Only restrict by user_id if NOT admin
+    if (!isAdmin) {
+        query = query.eq('user_id', user.id);
+    }
+
+    const { error } = await query;
 
     if (error) {
         console.error('Error deleting failure log:', error);

@@ -36,9 +36,14 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         );
     }
 
-    // 3. Update Project (with RLS policies providing security, but we double check ownership for specific error msg)
-    // We'll trust the RLS policies in 'supabase/rls_policies.sql' which usually say "can update if logic matches user_id"
-    // But explicit ownership check ensures we don't return 404 vs 403 confusion if RLS silently fails.
+    // 3. Check Role
+    const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    const isAdmin = userData?.role === 'admin';
 
     // Check ownership first
     const { data: existingProject } = await supabase
@@ -51,7 +56,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    if (existingProject.user_id !== user.id) {
+    if (existingProject.user_id !== user.id && !isAdmin) {
         return NextResponse.json({ error: 'Forbes forbidden: You do not own this project' }, { status: 403 });
     }
 
@@ -82,12 +87,24 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Delete (checking ownership via query)
-    const { error } = await supabase
-        .from('projects')
-        .delete()
-        .eq('id', projectId)
-        .eq('user_id', user.id); // Explicit ownership check in delete query
+    // 2. Check Role
+    const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    const isAdmin = userData?.role === 'admin';
+
+    // 3. Delete
+    let query = supabase.from('projects').delete().eq('id', projectId);
+
+    // Only restrict by user_id if NOT admin
+    if (!isAdmin) {
+        query = query.eq('user_id', user.id);
+    }
+
+    const { error } = await query;
 
     if (error) {
         console.error('Delete error:', error);

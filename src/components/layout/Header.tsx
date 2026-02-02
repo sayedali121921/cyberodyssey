@@ -152,6 +152,18 @@ export default function Header({ user }: HeaderProps) {
                                             <span>👤</span> Your Profile
                                         </Link>
                                         <Link
+                                            href={`/profile/${user.username || user.id}`}
+                                            className="flex items-center gap-3 px-4 py-2 text-sm text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                                        >
+                                            <span>📂</span> My Projects
+                                        </Link>
+                                        <Link
+                                            href={`/profile/${user.username || user.id}`}
+                                            className="flex items-center gap-3 px-4 py-2 text-sm text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
+                                        >
+                                            <span>📝</span> My Logs
+                                        </Link>
+                                        <Link
                                             href="/profile/edit"
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
                                         >

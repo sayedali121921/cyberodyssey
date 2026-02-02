@@ -11,8 +11,21 @@ export default function EditProjectLink({ slug, projectUserId }: { slug: string,
     useEffect(() => {
         async function checkUser() {
             const { data: { user } } = await supabase.auth.getUser();
-            if (user && user.id === projectUserId) {
-                setIsOwner(true);
+            if (user) {
+                if (user.id === projectUserId) {
+                    setIsOwner(true);
+                } else {
+                    // Check if admin
+                    const { data: userData } = await supabase
+                        .from('users')
+                        .select('role')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (userData?.role === 'admin') {
+                        setIsOwner(true); // Treat admin as owner for UI purposes
+                    }
+                }
             }
         }
         checkUser();
