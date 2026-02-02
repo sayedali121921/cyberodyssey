@@ -1,180 +1,147 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import DonationButton from '@/components/donate/DonationButton';
 
 export const metadata: Metadata = {
-    title: 'Support Cyberodyssey',
-    description: 'Help us build the future of learning documentation. Your support keeps Cyberodyssey free and accessible.',
+    title: 'Support Cyberodyssey | Empower Open Learning',
+    description: 'Help us build the future of failure-driven learning. Your support keeps Cyberodyssey free and accessible for everyone.',
 };
 
 export default function DonatePage() {
     return (
-        <div className="min-h-screen py-16 px-4">
-            <div className="max-w-3xl mx-auto">
-                {/* Hero */}
-                <div className="text-center mb-12">
-                    <div className="text-6xl mb-4">💝</div>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                        Support <span className="gradient-text">Cyberodyssey</span>
+        <div className="min-h-screen pt-20 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Background Decoration */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-cyan/5 rounded-full blur-3xl -z-10" />
+
+            <div className="max-w-4xl mx-auto space-y-16">
+
+                {/* Hero Section */}
+                <section className="text-center space-y-6 relative">
+                    <div className="inline-block p-3 rounded-2xl bg-gradient-to-br from-magenta/20 to-purple-500/20 mb-4 animate-bounce-slow">
+                        <span className="text-4xl">💝</span>
+                    </div>
+                    <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan via-white to-magenta">
+                        Support the Odyssey
                     </h1>
-                    <p className="text-xl text-warm-gray max-w-xl mx-auto">
-                        Help us keep learning accessible. Your contribution directly
-                        supports platform development and student resources.
+                    <p className="text-xl text-warm-gray max-w-2xl mx-auto leading-relaxed">
+                        Cyberodyssey is built on the belief that <span className="text-white font-medium">failure is data</span>, not defeat.
+                        Your contribution helps us keep this platform free, ad-free, and accessible to every learner worldwide.
                     </p>
-                </div>
+                </section>
+
+                {/* Impact Grid */}
+                <section className="grid md:grid-cols-3 gap-6">
+                    <div className="card p-6 text-center space-y-2 border-cyan/20 bg-gradient-to-b from-charcoal to-cyan/5">
+                        <div className="text-3xl font-bold text-cyan">100%</div>
+                        <div className="text-sm text-muted-text font-medium uppercase tracking-wider">Free for Students</div>
+                    </div>
+                    <div className="card p-6 text-center space-y-2 border-magenta/20 bg-gradient-to-b from-charcoal to-magenta/5">
+                        <div className="text-3xl font-bold text-magenta">Zero</div>
+                        <div className="text-sm text-muted-text font-medium uppercase tracking-wider">Data Selling</div>
+                    </div>
+                    <div className="card p-6 text-center space-y-2 border-warning/20 bg-gradient-to-b from-charcoal to-warning/5">
+                        <div className="text-3xl font-bold text-warning">Open</div>
+                        <div className="text-sm text-muted-text font-medium uppercase tracking-wider">Source Code</div>
+                    </div>
+                </section>
+
+                {/* Donation Options */}
+                <section className="max-w-2xl mx-auto w-full">
+                    <div className="card bg-slate/10 p-1 border-white/5">
+                        <div className="space-y-4 p-6">
+                            <h2 className="text-2xl font-bold text-center mb-8">Choose Your Method</h2>
+
+                            {/* PayPal */}
+                            <div className="group relative overflow-hidden rounded-xl border border-slate/30 bg-charcoal hover:border-cyan/50 transition-all duration-300">
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="relative p-4 flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                                        💳
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-lg">PayPal</h3>
+                                        <p className="text-sm text-muted-text">Secure one-time or monthly support</p>
+                                    </div>
+                                    <a
+                                        href="https://paypal.me/cyberodyssey"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-secondary text-sm px-6 py-2.5"
+                                    >
+                                        Donate
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* Bank Transfer */}
+                            <div className="group relative overflow-hidden rounded-xl border border-slate/30 bg-charcoal hover:border-success/50 transition-all duration-300">
+                                <div className="absolute inset-0 bg-gradient-to-r from-success/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="relative p-4 flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-lg bg-success/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                                        🏦
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-lg">Bank Transfer</h3>
+                                        <p className="text-sm text-muted-text">Direct 100% transfer with no fees</p>
+                                    </div>
+                                    <DonationButton message="Contact us at donate@cyberodyssey.org for bank details">
+                                        Get Info
+                                    </DonationButton>
+                                </div>
+                            </div>
+
+                            {/* Crypto */}
+                            <div className="group relative overflow-hidden rounded-xl border border-slate/30 bg-charcoal hover:border-warning/50 transition-all duration-300">
+                                <div className="absolute inset-0 bg-gradient-to-r from-warning/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="relative p-4 flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-lg bg-warning/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                                        ₿
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-lg">Cryptocurrency</h3>
+                                        <p className="text-sm text-muted-text">BTC, ETH, USDT accepted</p>
+                                    </div>
+                                    <DonationButton message="Contact us at donate@cyberodyssey.org for wallet addresses">
+                                        Wallets
+                                    </DonationButton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {/* Why Support */}
-                <div className="card mb-8">
-                    <h2 className="text-xl font-bold mb-4">Why Your Support Matters</h2>
-                    <div className="space-y-4 text-warm-gray">
-                        <p>
-                            Cyberodyssey is built by students, for students. We believe everyone
-                            deserves access to quality learning resources and mentorship,
-                            regardless of their financial situation.
-                        </p>
-                        <p>
-                            Your donation helps us:
-                        </p>
-                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <section className="grid md:grid-cols-2 gap-8 items-center">
+                    <div className="space-y-4">
+                        <h2 className="text-2xl font-bold">Where does the money go?</h2>
+                        <ul className="space-y-3">
                             {[
-                                '🖥️ Keep servers running 24/7',
-                                '📚 Add more learning resources',
-                                '👨‍🏫 Support mentor programs',
-                                '🔧 Develop new features',
-                                '📱 Build mobile apps',
-                                '🌍 Reach more students globally',
+                                { icon: '🖥️', text: 'Server & Database Costs' },
+                                { icon: '🔧', text: 'Development Tools & APIs' },
+                                { icon: '📚', text: 'Acquiring Educational Content' },
+                                { icon: '🌍', text: 'Community Outreach Programs' },
                             ].map((item) => (
-                                <li key={item} className="flex items-center gap-2 text-sm">
-                                    {item}
+                                <li key={item.text} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+                                    <span>{item.icon}</span>
+                                    <span className="text-warm-gray">{item.text}</span>
                                 </li>
                             ))}
                         </ul>
                     </div>
-                </div>
-
-                {/* Donation Options */}
-                <div className="card mb-8">
-                    <h2 className="text-xl font-bold mb-6">Choose How to Support</h2>
-
-                    <div className="space-y-4">
-                        {/* PayPal */}
-                        <div className="p-4 rounded-xl border border-slate/30 hover:border-cyan/30 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl">
-                                    💳
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-semibold">PayPal</h3>
-                                    <p className="text-sm text-muted-text">One-time or recurring donation</p>
-                                </div>
-                                <a
-                                    href="https://paypal.me/cyberodyssey"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn-secondary text-sm px-4 py-2"
-                                >
-                                    Donate
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* Bank Transfer */}
-                        <div className="p-4 rounded-xl border border-slate/30 hover:border-cyan/30 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-success/20 flex items-center justify-center text-2xl">
-                                    🏦
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-semibold">Bank Transfer</h3>
-                                    <p className="text-sm text-muted-text">Direct bank transfer</p>
-                                </div>
-                                <button
-                                    className="btn-secondary text-sm px-4 py-2"
-                                    onClick={() => alert('Contact us at donate@cyberodyssey.org for bank details')}
-                                >
-                                    Get Details
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Crypto */}
-                        <div className="p-4 rounded-xl border border-slate/30 hover:border-cyan/30 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-warning/20 flex items-center justify-center text-2xl">
-                                    ₿
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-semibold">Cryptocurrency</h3>
-                                    <p className="text-sm text-muted-text">Bitcoin, Ethereum, USDT</p>
-                                </div>
-                                <button
-                                    className="btn-secondary text-sm px-4 py-2"
-                                    onClick={() => alert('Contact us at donate@cyberodyssey.org for wallet addresses')}
-                                >
-                                    View Wallets
-                                </button>
-                            </div>
-                        </div>
+                    <div className="p-6 rounded-2xl bg-gradient-to-br from-charcoal to-slate/20 border border-slate/30 text-center">
+                        <p className="text-xl italic font-serif text-warm-gray mb-4">
+                            "We are two students with a laptop and a dream. Every coffee you buy us converts directly into lines of code."
+                        </p>
+                        <div className="text-cyan font-bold">— Sayed & Mujtaba</div>
                     </div>
-                </div>
+                </section>
 
-                {/* Transparency */}
-                <div className="card mb-8">
-                    <h2 className="text-xl font-bold mb-4">100% Transparent</h2>
-                    <p className="text-warm-gray mb-4">
-                        We believe in full transparency. Here's how donations are typically allocated:
-                    </p>
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                        <div className="p-4 rounded-lg bg-cyan/10">
-                            <div className="text-2xl font-bold text-cyan">60%</div>
-                            <div className="text-xs text-muted-text">Platform Development</div>
-                        </div>
-                        <div className="p-4 rounded-lg bg-success/10">
-                            <div className="text-2xl font-bold text-success">25%</div>
-                            <div className="text-xs text-muted-text">Content & Resources</div>
-                        </div>
-                        <div className="p-4 rounded-lg bg-warning/10">
-                            <div className="text-2xl font-bold text-warning">15%</div>
-                            <div className="text-xs text-muted-text">Operations</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Other Ways */}
-                <div className="card">
-                    <h2 className="text-xl font-bold mb-4">Other Ways to Help</h2>
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <div className="p-4 rounded-lg bg-charcoal/50">
-                            <div className="text-2xl mb-2">⭐</div>
-                            <h3 className="font-semibold text-sm mb-1">Star us on GitHub</h3>
-                            <p className="text-xs text-muted-text">Every star helps us grow</p>
-                        </div>
-                        <div className="p-4 rounded-lg bg-charcoal/50">
-                            <div className="text-2xl mb-2">📢</div>
-                            <h3 className="font-semibold text-sm mb-1">Spread the Word</h3>
-                            <p className="text-xs text-muted-text">Tell your friends about us</p>
-                        </div>
-                        <div className="p-4 rounded-lg bg-charcoal/50">
-                            <div className="text-2xl mb-2">👨‍🏫</div>
-                            <h3 className="font-semibold text-sm mb-1">Become a Mentor</h3>
-                            <p className="text-xs text-muted-text">Share your expertise</p>
-                        </div>
-                        <div className="p-4 rounded-lg bg-charcoal/50">
-                            <div className="text-2xl mb-2">🐛</div>
-                            <h3 className="font-semibold text-sm mb-1">Report Bugs</h3>
-                            <p className="text-xs text-muted-text">Help improve the platform</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Thank You */}
-                <div className="text-center mt-12">
-                    <p className="text-warm-gray">
-                        Thank you for believing in accessible education. 💙
-                    </p>
-                    <Link href="/" className="text-cyan hover:text-cyan-hover mt-4 inline-block">
-                        ← Back to Home
+                <div className="text-center pt-8 border-t border-slate/10">
+                    <Link href="/" className="text-muted-text hover:text-cyan transition-colors text-sm">
+                        ← Returns to Home
                     </Link>
                 </div>
+
             </div>
         </div>
     );

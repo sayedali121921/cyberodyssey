@@ -1,129 +1,94 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
-    title: 'About Us',
-    description: 'Learn about Cyberodyssey - a student-focused learning-in-public platform.',
+    title: 'About the Founders | Cyberodyssey',
+    description: 'Meet Sayed Awais Ali and Mujtaba Najam, the visionaries behind Cyberodyssey.',
 };
-
-const team = [
-    { name: 'Founder', role: 'Vision & Strategy', bio: 'Passionate about making learning accessible and celebrating the learning journey, not just the destination.' },
-];
-
-const milestones = [
-    { year: '2024', event: 'Cyberodyssey Founded', description: 'Started with a simple idea: make learning visible.' },
-    { year: '2024', event: 'First 100 Users', description: 'Community started growing organically.' },
-    { year: '2024', event: 'Mentor Program Launch', description: 'Industry experts joined to give back.' },
-    { year: '2025', event: 'Platform v2.0', description: 'Major redesign with enhanced features.' },
-];
 
 export default function AboutPage() {
     return (
-        <div className="min-h-screen py-16 px-4">
-            <div className="max-w-4xl mx-auto">
-                {/* Hero */}
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-cyan/10 text-cyan text-sm font-medium mb-4">
-                        Our Story
-                    </span>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                        About <span className="gradient-text">Cyberodyssey</span>
+        <div className="min-h-screen pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto space-y-16">
+
+                {/* Hero Section */}
+                <section className="text-center space-y-6">
+                    <h1 className="text-4xl md:text-5xl font-bold">
+                        Meet the <span className="gradient-text">Visionaries</span>
                     </h1>
-                    <p className="text-xl text-warm-gray max-w-2xl mx-auto leading-relaxed">
-                        We're building a world where learning in public is celebrated,
-                        failures are stepping stones, and growth is the ultimate achievement.
+                    <p className="text-xl text-warm-gray max-w-2xl mx-auto relative">
+                        <span className="text-4xl absolute -top-4 -left-2 text-cyan/20">"</span>
+                        We want people to share their imperfections and failures to grow.
+                        <span className="text-4xl absolute -bottom-8 -right-2 text-cyan/20">"</span>
                     </p>
-                </div>
+                </section>
 
-                {/* Story */}
-                <div className="card mb-12">
-                    <h2 className="text-2xl font-bold mb-4">The Problem We're Solving</h2>
-                    <div className="space-y-4 text-warm-gray">
-                        <p>
-                            Traditional education focuses on grades and certifications.
-                            Job applications focus on final projects and polished portfolios.
-                            But the real learning happens in between — in the struggles,
-                            the debugging sessions, the failed attempts.
-                        </p>
-                        <p>
-                            <span className="text-off-white font-medium">Cyberodyssey</span> was born from a simple observation:
-                            the most valuable lessons often come from failure, yet we hide our failures
-                            and only show our successes.
-                        </p>
-                        <p>
-                            We believe in <span className="text-cyan font-medium">learning in public</span> —
-                            documenting not just what you built, but how you built it, what went wrong,
-                            and what you learned along the way.
-                        </p>
-                    </div>
-                </div>
+                {/* The Founders Grid */}
+                <section className="grid md:grid-cols-2 gap-8 lg:gap-12">
 
-                {/* What Makes Us Different */}
-                <div className="grid gap-6 md:grid-cols-2 mb-12">
-                    <div className="card">
-                        <div className="text-3xl mb-3">📝</div>
-                        <h3 className="text-lg font-semibold mb-2">Failure Logs</h3>
-                        <p className="text-sm text-warm-gray">
-                            We encourage documenting failures. Not to shame, but to learn.
-                            Your struggles become valuable lessons for others.
-                        </p>
-                    </div>
-                    <div className="card">
-                        <div className="text-3xl mb-3">🎯</div>
-                        <h3 className="text-lg font-semibold mb-2">Learning Identity</h3>
-                        <p className="text-sm text-warm-gray">
-                            Build a verifiable portfolio that shows your growth journey,
-                            not just your finished work.
-                        </p>
-                    </div>
-                    <div className="card">
-                        <div className="text-3xl mb-3">👨‍🏫</div>
-                        <h3 className="text-lg font-semibold mb-2">Expert Mentorship</h3>
-                        <p className="text-sm text-warm-gray">
-                            Get feedback from verified industry professionals who
-                            volunteer their time to help learners grow.
-                        </p>
-                    </div>
-                    <div className="card">
-                        <div className="text-3xl mb-3">🤝</div>
-                        <h3 className="text-lg font-semibold mb-2">Community First</h3>
-                        <p className="text-sm text-warm-gray">
-                            Learn together, help each other, and celebrate wins —
-                            big and small — as a community.
-                        </p>
-                    </div>
-                </div>
-
-                {/* Timeline */}
-                <div className="card mb-12">
-                    <h2 className="text-2xl font-bold mb-6">Our Journey</h2>
-                    <div className="space-y-6">
-                        {milestones.map((milestone, index) => (
-                            <div key={index} className="flex gap-4">
-                                <div className="flex-shrink-0 w-16 text-sm font-bold text-cyan">{milestone.year}</div>
-                                <div className="flex-1 pb-6 border-l-2 border-slate/30 pl-6 relative">
-                                    <div className="absolute left-[-5px] top-1 w-2 h-2 rounded-full bg-cyan"></div>
-                                    <h3 className="font-semibold">{milestone.event}</h3>
-                                    <p className="text-sm text-muted-text">{milestone.description}</p>
+                    {/* Sayed Awais Ali */}
+                    <div className="card group hover:border-cyan/50 transition-colors duration-300">
+                        <div className="flex flex-col items-center text-center space-y-4">
+                            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan/20 to-blue-500/20 p-1">
+                                <div className="w-full h-full rounded-full bg-charcoal flex items-center justify-center overflow-hidden">
+                                    {/* Placeholder until real image */}
+                                    <span className="text-4xl">👨‍💻</span>
                                 </div>
                             </div>
-                        ))}
+                            <div>
+                                <h2 className="text-2xl font-bold">Sayed Awais Ali</h2>
+                                <p className="text-cyan font-medium">Cybersecurity Student & Co-Founder</p>
+                            </div>
+                            <p className="text-warm-gray leading-relaxed">
+                                Passionate about solving real-world problems and helping everyone grow.
+                                Dedicated to building platforms that bridge the gap between complex security concepts and accessible learning.
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                {/* CTA */}
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-4">Join Our Mission</h2>
-                    <p className="text-warm-gray mb-6 max-w-lg mx-auto">
-                        Whether you're just starting or you're an experienced developer
-                        looking to give back, there's a place for you here.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/auth/login" className="btn-primary">Start Learning</Link>
-                        <Link href="/mentor/apply" className="btn-secondary">Become a Mentor</Link>
-                        <Link href="/donate" className="btn-ghost border border-slate">Support Us</Link>
+                    {/* Mujtaba Najam */}
+                    <div className="card group hover:border-cyan/50 transition-colors duration-300">
+                        <div className="flex flex-col items-center text-center space-y-4">
+                            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan/20 to-blue-500/20 p-1">
+                                <div className="w-full h-full rounded-full bg-charcoal flex items-center justify-center overflow-hidden">
+                                    {/* Placeholder until real image */}
+                                    <span className="text-4xl">🛡️</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold">Mujtaba Najam</h2>
+                                <p className="text-cyan font-medium">Cybersecurity Student & Co-Founder</p>
+                            </div>
+                            <p className="text-warm-gray leading-relaxed">
+                                Contributing to the vision of a collective learning community.
+                                Believes in documenting failures as the stepping stones to mastery, fostering an environment where growth comes from understanding errors.
+                            </p>
+                        </div>
                     </div>
-                </div>
+
+                </section>
+
+                {/* Our Vision / Story */}
+                <section className="card bg-gradient-to-br from-charcoal to-slate/10 border-slate/50">
+                    <div className="max-w-3xl mx-auto text-center space-y-6 py-8">
+                        <h2 className="text-3xl font-bold">Why We Created Cyberodyssey</h2>
+                        <div className="space-y-4 text-lg text-warm-gray leading-relaxed">
+                            <p>
+                                In an era where AI creates perfection in seconds, we felt something was missing:
+                                <span className="text-white font-semibold"> The struggle. The learning curve. The humanity.</span>
+                            </p>
+                            <p>
+                                Every other platform focuses on showcasing the "perfect" final result. But true learning doesn't happen
+                                at the finish line—it happens in the messy middle. It happens when things break.
+                            </p>
+                            <p>
+                                Our motive is to encourage true learners to document their <b className="text-cyan">failures</b> and how they handled them.
+                                We built Cyberodyssey to be a safe harbor for imperfection, where documenting a bug is celebrated just as much as shipping a feature.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </div>
     );

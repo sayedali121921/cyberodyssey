@@ -1,22 +1,58 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
     title: 'Community',
     description: 'Join the Cyberodyssey community of learners, share your journey, and grow together.',
 };
 
-const discussions = [
-    { id: 1, title: 'Best practices for documenting your first project', author: 'Sarah Chen', replies: 24, category: 'Tips', hot: true },
-    { id: 2, title: 'How I turned my biggest failure into a learning opportunity', author: 'James Wilson', replies: 45, category: 'Stories', hot: true },
-    { id: 3, title: 'Resources for learning system design', author: 'Maria Garcia', replies: 18, category: 'Resources' },
-    { id: 4, title: 'Weekly Challenge: Build a CLI tool in any language', author: 'Community Team', replies: 67, category: 'Challenges', hot: true },
-    { id: 5, title: 'Seeking feedback on my portfolio project', author: 'Alex Kumar', replies: 12, category: 'Feedback' },
-];
+export const dynamic = 'force-dynamic';
 
-const stats = { members: 1893, discussions: 324, mentors: 47, countries: 28 };
+async function getCommunityData() {
+    const supabase = createClient();
 
-export default function CommunityPage() {
+    // Parallel data fetching
+    const [
+        { count: memberCount },
+        { count: failureLogCount },
+        { count: mentorCount },
+        { data: recentLogs }
+    ] = await Promise.all([
+        supabase.from('users').select('*', { count: 'exact', head: true }),
+        supabase.from('failure_logs').select('*', { count: 'exact', head: true }),
+        supabase.from('users').select('*', { count: 'exact', head: true }).in('role', ['mentor', 'senior_mentor']),
+        supabase
+            .from('failure_logs')
+            .select(`
+                id,
+                goal,
+                what_went_wrong,
+                created_at,
+                users (
+                    full_name,
+                    username,
+                    avatar_url
+                )
+            `)
+            .order('created_at', { ascending: false })
+            .limit(10)
+    ]);
+
+    return {
+        stats: {
+            members: memberCount || 0,
+            discussions: failureLogCount || 0,
+            mentors: mentorCount || 0,
+            countries: 12 // Placeholder as we don't track countries yet
+        },
+        discussions: recentLogs || []
+    };
+}
+
+export default async function CommunityPage() {
+    const { stats, discussions } = await getCommunityData();
+
     return (
         <div className="min-h-screen py-16 px-4">
             <div className="max-w-6xl mx-auto">
@@ -42,47 +78,56 @@ export default function CommunityPage() {
                     </div>
                     <div className="card text-center">
                         <div className="text-3xl font-bold text-success">{stats.discussions}</div>
-                        <div className="text-sm text-muted-text">Discussions</div>
+                        <div className="text-sm text-muted-text">Failure Logs (Discussions)</div>
                     </div>
                     <div className="card text-center">
                         <div className="text-3xl font-bold text-warning">{stats.mentors}</div>
                         <div className="text-sm text-muted-text">Active Mentors</div>
                     </div>
                     <div className="card text-center">
-                        <div className="text-3xl font-bold text-off-white">{stats.countries}</div>
+                        <div className="text-3xl font-bold text-off-white">{stats.countries}+</div>
                         <div className="text-sm text-muted-text">Countries</div>
                     </div>
                 </div>
 
-                {/* Featured Discussions */}
+                {/* Featured Discussions (Recent Failure Logs) */}
                 <div className="mb-16">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold">Trending Discussions</h2>
-                        <button className="btn-secondary text-sm">Start Discussion</button>
+                        <h2 className="text-2xl font-bold">Recent Learning Logs</h2>
+                        <Link href="/new/failure-log" className="btn-secondary text-sm">Post a Log</Link>
                     </div>
                     <div className="space-y-4">
-                        {discussions.map((discussion) => (
-                            <div key={discussion.id} className="card card-hover">
+                        {discussions.map((log: any) => (
+                            <Link key={log.id} href={`/failure-log/${log.id}`} className="card card-hover block">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan to-teal-400 flex items-center justify-center text-charcoal font-bold text-sm flex-shrink-0">
-                                        {discussion.author[0]}
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan to-teal-400 flex items-center justify-center text-charcoal font-bold text-sm flex-shrink-0 overflow-hidden relative">
+                                        {log.users?.avatar_url ? (
+                                            <img src={log.users.avatar_url} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <span>{(log.users?.full_name || 'U')[0]}</span>
+                                        )}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h3 className="font-semibold truncate">{discussion.title}</h3>
-                                            {discussion.hot && (
-                                                <span className="px-2 py-0.5 rounded text-xs bg-error/20 text-error">🔥 Hot</span>
-                                            )}
+                                            <h3 className="font-semibold truncate text-lg group-hover:text-cyan transition-colors">{log.goal}</h3>
                                         </div>
-                                        <div className="flex items-center gap-4 text-sm text-muted-text">
-                                            <span>{discussion.author}</span>
-                                            <span className="px-2 py-0.5 rounded bg-slate/30">{discussion.category}</span>
-                                            <span>💬 {discussion.replies} replies</span>
+                                        <p className="text-sm text-warm-gray line-clamp-1 mb-2">
+                                            Failed at: "{log.what_went_wrong}"
+                                        </p>
+                                        <div className="flex items-center gap-4 text-xs text-muted-text">
+                                            <span>{log.users?.full_name || 'Anonymous'}</span>
+                                            <span className="px-2 py-0.5 rounded bg-slate/30">Failure Log</span>
+                                            <span>{new Date(log.created_at).toLocaleDateString()}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
+                        {discussions.length === 0 && (
+                            <div className="text-center py-12 text-muted-text bg-white/5 rounded-xl">
+                                No discussions yet. Be the first to share your failure!
+                            </div>
+                        )}
                     </div>
                 </div>
 

@@ -29,7 +29,7 @@ const defaultResults: SearchResult[] = [
     // Actions
     { type: 'action', title: 'New Project', href: '/new/project', icon: '➕', description: 'Create a new project' },
     { type: 'action', title: 'New Failure Log', href: '/new/failure-log', icon: '📝', description: 'Document a failure' },
-    { type: 'action', title: 'Edit Profile', href: '/profile/edit', icon: '⚙️', description: 'Update your profile' },
+    { type: 'action', title: 'Settings (Edit Profile)', href: '/profile/edit', icon: '⚙️', description: 'Update profile and account' },
 ];
 
 export function CommandPalette() {
@@ -139,8 +139,8 @@ export function CommandPalette() {
                                         key={`${result.type}-${result.href}`}
                                         onClick={() => handleSelect(result)}
                                         className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${index === selectedIndex
-                                                ? 'bg-cyan/20 text-cyan'
-                                                : 'hover:bg-charcoal/50 text-warm-gray'
+                                            ? 'bg-cyan/20 text-cyan'
+                                            : 'hover:bg-charcoal/50 text-warm-gray'
                                             }`}
                                     >
                                         <span className="text-lg">{result.icon}</span>

@@ -71,44 +71,58 @@ export default async function MentorsPage() {
 
                 {/* Mentor Grid */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-16">
-                    {mentors.map((mentor: any) => (
-                        <Link
-                            key={mentor.id}
-                            href={`/profile/${mentor.username}`}
-                            className="card card-hover"
-                        >
-                            <div className="flex items-start gap-4 mb-4">
-                                {mentor.avatar_url ? (
-                                    <img src={mentor.avatar_url} alt={mentor.full_name} className="w-14 h-14 rounded-full object-cover" />
-                                ) : (
-                                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-success to-teal-400 flex items-center justify-center text-charcoal font-bold text-lg">
-                                        {mentor.full_name?.[0] || 'M'}
+                    {mentors && mentors.length > 0 ? (
+                        mentors.map((mentor: any) => (
+                            <Link
+                                key={mentor.id}
+                                href={`/profile/${mentor.username}`}
+                                className="card card-hover"
+                            >
+                                <div className="flex items-start gap-4 mb-4">
+                                    {mentor.avatar_url ? (
+                                        <img src={mentor.avatar_url} alt={mentor.full_name} className="w-14 h-14 rounded-full object-cover" />
+                                    ) : (
+                                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-success to-teal-400 flex items-center justify-center text-charcoal font-bold text-lg">
+                                            {mentor.full_name?.[0] || 'M'}
+                                        </div>
+                                    )}
+                                    <div>
+                                        <h3 className="font-semibold">{mentor.full_name}</h3>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`text-xs px-2 py-0.5 rounded ${mentor.role === 'senior_mentor' ? 'bg-success/20 text-success' : 'bg-cyan/20 text-cyan'}`}>
+                                                {mentor.role === 'senior_mentor' ? 'Senior Mentor' : 'Mentor'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-warm-gray mb-4 line-clamp-2">{mentor.bio}</p>
+                                {Array.isArray(mentor.specialties) && mentor.specialties.length > 0 && (
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {mentor.specialties.slice(0, 3).map((specialty: string) => (
+                                            <span key={specialty} className="text-xs px-2 py-1 rounded bg-slate/30 text-muted-text">
+                                                {specialty}
+                                            </span>
+                                        ))}
                                     </div>
                                 )}
-                                <div>
-                                    <h3 className="font-semibold">{mentor.full_name}</h3>
-                                    <div className="flex items-center gap-2">
-                                        <span className={`text-xs px-2 py-0.5 rounded ${mentor.role === 'senior_mentor' ? 'bg-success/20 text-success' : 'bg-cyan/20 text-cyan'}`}>
-                                            {mentor.role === 'senior_mentor' ? 'Senior Mentor' : 'Mentor'}
-                                        </span>
-                                    </div>
+                                <div className="text-xs text-muted-text">
+                                    📝 {mentor.reviews_given || 0} reviews given
                                 </div>
-                            </div>
-                            <p className="text-sm text-warm-gray mb-4 line-clamp-2">{mentor.bio}</p>
-                            {mentor.specialties && (
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {mentor.specialties.slice(0, 3).map((specialty: string) => (
-                                        <span key={specialty} className="text-xs px-2 py-1 rounded bg-slate/30 text-muted-text">
-                                            {specialty}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                            <div className="text-xs text-muted-text">
-                                📝 {mentor.reviews_given || 0} reviews given
-                            </div>
-                        </Link>
-                    ))}
+                            </Link>
+                        ))
+                    ) : (
+                        <div className="col-span-full py-12 text-center card bg-slate/5 border-dashed border-cyan/20">
+                            <div className="text-5xl mb-4">🔭</div>
+                            <h3 className="text-xl font-bold mb-2">No Mentors Found (Yet!)</h3>
+                            <p className="text-warm-gray mb-6 max-w-md mx-auto">
+                                We are still onboarding our first wave of verified mentors.
+                                Apply today if you'd like to help others grow!
+                            </p>
+                            <Link href="/mentor/apply" className="btn-primary">
+                                Apply to be a Mentor
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 {/* Become a Mentor CTA */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ interface Project {
     slug: string;
 }
 
-export default function NewFailureLogPage() {
+function NewFailureLogForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const projectId = searchParams.get('project');
@@ -237,8 +237,8 @@ export default function NewFailureLogPage() {
                                     type="button"
                                     onClick={() => setVisibility('public')}
                                     className={`flex-1 py-3 px-4 rounded-md border transition-colors ${visibility === 'public'
-                                            ? 'border-cyan bg-cyan-subtle text-cyan'
-                                            : 'border-slate text-warm-gray hover:border-cyan/50'
+                                        ? 'border-cyan bg-cyan-subtle text-cyan'
+                                        : 'border-slate text-warm-gray hover:border-cyan/50'
                                         }`}
                                 >
                                     <span className="block font-medium">🌍 Public</span>
@@ -250,8 +250,8 @@ export default function NewFailureLogPage() {
                                     type="button"
                                     onClick={() => setVisibility('private')}
                                     className={`flex-1 py-3 px-4 rounded-md border transition-colors ${visibility === 'private'
-                                            ? 'border-cyan bg-cyan-subtle text-cyan'
-                                            : 'border-slate text-warm-gray hover:border-cyan/50'
+                                        ? 'border-cyan bg-cyan-subtle text-cyan'
+                                        : 'border-slate text-warm-gray hover:border-cyan/50'
                                         }`}
                                 >
                                     <span className="block font-medium">🔒 Private</span>
@@ -289,5 +289,31 @@ export default function NewFailureLogPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+function LoadingFallback() {
+    return (
+        <div className="min-h-screen py-12 px-4">
+            <div className="mx-auto max-w-2xl">
+                <div className="card animate-pulse">
+                    <div className="h-8 bg-slate/30 rounded w-1/3 mb-4"></div>
+                    <div className="h-4 bg-slate/30 rounded w-2/3 mb-8"></div>
+                    <div className="space-y-6">
+                        <div className="h-20 bg-slate/30 rounded"></div>
+                        <div className="h-32 bg-slate/30 rounded"></div>
+                        <div className="h-20 bg-slate/30 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function NewFailureLogPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <NewFailureLogForm />
+        </Suspense>
     );
 }

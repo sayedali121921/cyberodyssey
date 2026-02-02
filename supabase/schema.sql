@@ -21,6 +21,7 @@ CREATE TABLE users (
   linkedin_url text,
   is_platform_verified boolean DEFAULT false,
   is_community_verified boolean DEFAULT false,
+  specialties text[], -- Array of mentor or user specialties
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
@@ -40,6 +41,7 @@ CREATE TABLE projects (
   description text,
   repo_url text,
   demo_url text,
+  file_url text, -- For project downloads (ZIP, PDF, etc.)
   status text DEFAULT 'IN_PROGRESS' CHECK (status IN ('IN_PROGRESS', 'COMPLETED', 'ABANDONED')),
   tags text[],
   image_urls text[],

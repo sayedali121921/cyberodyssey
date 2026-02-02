@@ -21,8 +21,10 @@ export default function Header({ user }: HeaderProps) {
 
     const navigation = [
         { name: 'Projects', href: '/projects', icon: '📁' },
+        { name: 'Research', href: '/research', icon: '📄' },
         { name: 'Resources', href: '/resources', icon: '📚' },
         { name: 'Mentors', href: '/mentors', icon: '👨‍🏫' },
+        { name: 'About', href: '/about', icon: 'ℹ️' },
     ];
 
     const isActive = (href: string) => pathname?.startsWith(href);
@@ -148,7 +150,7 @@ export default function Header({ user }: HeaderProps) {
                                             <span>👤</span> Your Profile
                                         </Link>
                                         <Link
-                                            href="/settings"
+                                            href="/profile/edit"
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
                                         >
                                             <span>⚙️</span> Settings
@@ -259,16 +261,8 @@ export default function Header({ user }: HeaderProps) {
                             Leaderboard
                         </Link>
 
-                        {/* Research & Resources */}
-                        <p className="px-4 py-1 mt-3 text-xs text-muted-text uppercase tracking-wider">Learn</p>
-                        <Link
-                            href="/research"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
-                        >
-                            <span className="text-lg">📄</span>
-                            Research Papers
-                        </Link>
+                        {/* Research & Resources - HANDLED BY MAIN NAVIGATION LOOP */}
+                        {/* {navigation} loop handles Research and Resources now */}
 
                         {/* Create */}
                         {user && (
