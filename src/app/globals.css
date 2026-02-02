@@ -28,28 +28,9 @@
   body {
     @apply bg-charcoal text-off-white font-sans antialiased;
     min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(78, 205, 196, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(233, 69, 96, 0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(83, 52, 131, 0.05) 0%, transparent 60%);
-    background-attachment: fixed;
   }
 
-  /* Animated background grid */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-      linear-gradient(rgba(78, 205, 196, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(78, 205, 196, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
+  /* Headings use serif font */
 
   /* Headings use serif font */
   h1,
