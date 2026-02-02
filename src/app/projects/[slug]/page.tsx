@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import EditProjectLink from '@/components/projects/EditProjectLink';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -111,10 +112,16 @@ export default async function ProjectPage({ params }: PageProps) {
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-start justify-between gap-4 mb-4">
-                        <h1 className="text-3xl font-bold">{project.title}</h1>
-                        <span className={statusStyles[project.status as keyof typeof statusStyles]}>
-                            {project.status.replace('_', ' ')}
-                        </span>
+                        <div className="flex-1">
+                            <h1 className="text-3xl font-bold mb-2">{project.title}</h1>
+                            <div className="flex items-center gap-3">
+                                <span className={statusStyles[project.status as keyof typeof statusStyles]}>
+                                    {project.status.replace('_', ' ')}
+                                </span>
+                                {/* Owner Actions - Edit Link */}
+                                <EditProjectLink slug={params.slug} projectUserId={project.user_id} />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Tags */}
@@ -205,7 +212,7 @@ export default async function ProjectPage({ params }: PageProps) {
                         <h2 className="text-xl font-semibold">
                             Failure Logs ({project.failure_logs.length})
                         </h2>
-                        <Link href="/new/failure-log" className="btn-secondary text-sm">
+                        <Link href={`/new/failure-log?project_id=${project.id}`} className="btn-secondary text-sm">
                             + Add Failure Log
                         </Link>
                     </div>

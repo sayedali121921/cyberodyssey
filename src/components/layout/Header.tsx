@@ -34,9 +34,11 @@ export default function Header({ user }: HeaderProps) {
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan to-teal-400 flex items-center justify-center text-charcoal font-bold text-lg shadow-lg shadow-cyan/30 group-hover:shadow-cyan/50 transition-shadow">
-                        CO
-                    </div>
+                    <img
+                        src="/logo.png"
+                        alt="Cyberodyssey Logo"
+                        className="w-10 h-10 rounded-xl shadow-lg shadow-cyan/30 group-hover:shadow-cyan/50 transition-shadow object-cover"
+                    />
                     <span className="text-xl font-bold hidden sm:block">
                         <span className="text-cyan">Cyber</span>
                         <span className="text-off-white">odyssey</span>

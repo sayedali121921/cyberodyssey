@@ -1,319 +1,141 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
-interface Project {
-    id: string;
-    title: string;
-    slug: string;
-}
-
-function NewFailureLogForm() {
+export default function NewFailureLogPage() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const projectId = searchParams.get('project');
-
+    const supabase = createClient();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [selectedProject, setSelectedProject] = useState(projectId || '');
-    const [visibility, setVisibility] = useState<'public' | 'private'>('public');
 
-    useEffect(() => {
-        // Fetch user's projects
-        fetch('/api/projects?user=me')
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.data) {
-                    setProjects(data.data);
-                }
-            })
-            .catch(console.error);
-    }, []);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
 
         const formData = new FormData(e.currentTarget);
 
+        // Construct payload matching CreateFailureLogSchema
+        // Note: Optional fields are only included if they have content to avoid empty string accumulation
+        const getOptionalString = (key: string) => {
+            const val = formData.get(key) as string;
+            return val?.trim() || undefined;
+        };
+
+        const data = {
+            goal: (formData.get('goal') as string).trim(),
+            what_went_wrong: (formData.get('what_went_wrong') as string).trim(),
+            lessons_learned: (formData.get('lessons_learned') as string).trim(),
+            // Ensure visibility is a valid enum value
+            visibility: 'public' as const,
+            // Optional fields mapping
+            // project_id is handled if we add a select dropdown later
+        };
+
         try {
+            console.log('Submitting failure log:', data);
+
             const response = await fetch('/api/failure-logs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    project_id: selectedProject || undefined,
-                    goal: formData.get('goal'),
-                    what_went_wrong: formData.get('what_went_wrong'),
-                    attempts: formData.get('attempts') || undefined,
-                    what_tried: formData.get('what_tried') || undefined,
-                    outcome: formData.get('outcome') || undefined,
-                    lessons_learned: formData.get('lessons_learned') || undefined,
-                    next_steps: formData.get('next_steps') || undefined,
-                    visibility,
-                }),
+                body: JSON.stringify(data),
             });
 
-            const data = await response.json();
+            const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to create failure log');
+                console.error('Submission failed:', result);
+                throw new Error(result.error || result.details ? JSON.stringify(result.details) : 'Failed to create log');
             }
 
-            // Redirect based on whether linked to project
-            if (selectedProject) {
-                const project = projects.find((p) => p.id === selectedProject);
-                router.push(`/projects/${project?.slug || ''}`);
-            } else {
-                router.push(`/failure-logs/${data.data.id}`);
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Something went wrong');
+            console.log('Success:', result);
+            // Force hard navigation to avoid client router issues
+            window.location.href = '/failure-logs';
+        } catch (err: any) {
+            console.error('Client Error:', err);
+            setError(err.message);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
-        <div className="min-h-screen py-12 px-4">
-            <div className="mx-auto max-w-2xl">
-                {/* Back Link */}
-                <Link
-                    href={selectedProject ? `/projects/${projects.find(p => p.id === selectedProject)?.slug}` : '/projects'}
-                    className="inline-flex items-center gap-2 text-warm-gray hover:text-cyan transition-colors mb-6"
-                >
-                    ← Back
-                </Link>
+        <div className="min-h-screen py-12 px-4 flex items-center justify-center">
+            <div className="w-full max-w-2xl">
+                <div className="mb-8 text-center">
+                    <h1 className="text-3xl font-bold mb-2">Log a Failure</h1>
+                    <p className="text-warm-gray">
+                        "Failure is only the opportunity to begin again, this time more intelligently."
+                    </p>
+                </div>
 
                 <div className="card">
-                    <h1 className="text-2xl font-bold mb-2">Log a Failure</h1>
-                    <p className="text-warm-gray mb-6">
-                        Tell what you tried — every struggle is a step forward
-                    </p>
-
                     {error && (
-                        <div className="mb-6 p-4 bg-error/10 border border-error rounded-md text-error">
+                        <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-lg text-error text-sm">
                             {error}
                         </div>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Linked Project */}
                         <div>
-                            <label htmlFor="project" className="label">Link to Project</label>
-                            <select
-                                id="project"
-                                value={selectedProject}
-                                onChange={(e) => setSelectedProject(e.target.value)}
-                                className="input"
-                            >
-                                <option value="">No project (standalone log)</option>
-                                {projects.map((project) => (
-                                    <option key={project.id} value={project.id}>
-                                        {project.title}
-                                    </option>
-                                ))}
-                            </select>
-                            <p className="text-xs text-muted-text mt-1">
-                                Optional — link this log to one of your projects
-                            </p>
-                        </div>
-
-                        {/* Goal */}
-                        <div>
-                            <label htmlFor="goal" className="label">
-                                What were you trying to do? <span className="text-error">*</span>
+                            <label className="block text-sm font-medium mb-1">
+                                What were you trying to achieve?
                             </label>
-                            <textarea
-                                id="goal"
+                            <input
                                 name="goal"
                                 required
-                                rows={3}
-                                maxLength={1000}
-                                placeholder="e.g., Implement user authentication with JWT tokens"
-                                className="textarea"
+                                placeholder="e.g. Deploying my Next.js app to Vercel"
+                                className="input w-full"
                             />
                         </div>
 
-                        {/* What went wrong */}
                         <div>
-                            <label htmlFor="what_went_wrong" className="label">
-                                What went wrong? <span className="text-error">*</span>
+                            <label className="block text-sm font-medium mb-1">
+                                What went wrong?
                             </label>
                             <textarea
-                                id="what_went_wrong"
                                 name="what_went_wrong"
                                 required
                                 rows={4}
-                                maxLength={3000}
-                                placeholder="Describe the error, bug, or unexpected behavior you encountered"
-                                className="textarea"
+                                placeholder="e.g. Build failed with 'Module not found' error because I forgot to verify case sensitivity..."
+                                className="input w-full resize-none"
                             />
                         </div>
 
-                        {/* Attempts */}
                         <div>
-                            <label htmlFor="attempts" className="label">
-                                How many attempts did you make?
-                            </label>
-                            <input
-                                type="text"
-                                id="attempts"
-                                name="attempts"
-                                maxLength={200}
-                                placeholder="e.g., 3 attempts over 2 days"
-                                className="input"
-                            />
-                        </div>
-
-                        {/* What tried */}
-                        <div>
-                            <label htmlFor="what_tried" className="label">
-                                What did you try?
-                            </label>
-                            <textarea
-                                id="what_tried"
-                                name="what_tried"
-                                rows={4}
-                                maxLength={3000}
-                                placeholder="List the solutions and approaches you attempted"
-                                className="textarea"
-                            />
-                        </div>
-
-                        {/* Outcome */}
-                        <div>
-                            <label htmlFor="outcome" className="label">
-                                What was the outcome?
-                            </label>
-                            <textarea
-                                id="outcome"
-                                name="outcome"
-                                rows={3}
-                                maxLength={2000}
-                                placeholder="Did you solve it? Are you still stuck? What's the current state?"
-                                className="textarea"
-                            />
-                        </div>
-
-                        {/* Lessons learned */}
-                        <div>
-                            <label htmlFor="lessons_learned" className="label">
+                            <label className="block text-sm font-medium mb-1">
                                 What did you learn?
                             </label>
                             <textarea
-                                id="lessons_learned"
                                 name="lessons_learned"
-                                rows={3}
-                                maxLength={3000}
-                                placeholder="What insights or knowledge did you gain from this experience?"
-                                className="textarea"
+                                required
+                                rows={4}
+                                placeholder="e.g. Linux file systems are case-sensitive. Always run 'git mv' when renaming files..."
+                                className="input w-full resize-none"
                             />
                         </div>
 
-                        {/* Next steps */}
-                        <div>
-                            <label htmlFor="next_steps" className="label">
-                                What will you try next?
-                            </label>
-                            <textarea
-                                id="next_steps"
-                                name="next_steps"
-                                rows={2}
-                                maxLength={1000}
-                                placeholder="Your plan for moving forward"
-                                className="textarea"
-                            />
-                        </div>
-
-                        {/* Visibility */}
-                        <div>
-                            <label className="label">Visibility</label>
-                            <div className="flex gap-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setVisibility('public')}
-                                    className={`flex-1 py-3 px-4 rounded-md border transition-colors ${visibility === 'public'
-                                        ? 'border-cyan bg-cyan-subtle text-cyan'
-                                        : 'border-slate text-warm-gray hover:border-cyan/50'
-                                        }`}
-                                >
-                                    <span className="block font-medium">🌍 Public</span>
-                                    <span className="block text-xs mt-1 opacity-75">
-                                        Visible to everyone — helps others learn
-                                    </span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setVisibility('private')}
-                                    className={`flex-1 py-3 px-4 rounded-md border transition-colors ${visibility === 'private'
-                                        ? 'border-cyan bg-cyan-subtle text-cyan'
-                                        : 'border-slate text-warm-gray hover:border-cyan/50'
-                                        }`}
-                                >
-                                    <span className="block font-medium">🔒 Private</span>
-                                    <span className="block text-xs mt-1 opacity-75">
-                                        Only you can see this log
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Submit */}
-                        <div className="flex items-center justify-between pt-4 border-t border-slate">
-                            <p className="text-sm text-muted-text">
-                                Failure logs help normalize the learning process
-                            </p>
+                        <div className="pt-4 flex gap-4">
+                            <button
+                                type="button"
+                                onClick={() => router.back()}
+                                className="btn-ghost flex-1"
+                            >
+                                Cancel
+                            </button>
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="btn-primary"
+                                className="btn-primary flex-1"
                             >
-                                {isLoading ? 'Saving...' : 'Save Failure Log'}
+                                {isLoading ? 'Logging...' : 'Log Failure'}
                             </button>
                         </div>
                     </form>
                 </div>
-
-                {/* Encouragement */}
-                <div className="card mt-6 bg-cyan-subtle border-cyan/20">
-                    <h2 className="font-semibold text-cyan mb-2">🌱 Why document failures?</h2>
-                    <ul className="text-sm text-warm-gray space-y-1">
-                        <li>• It makes your struggle visible—and that helps others feel less alone</li>
-                        <li>• Mentors can provide targeted feedback on your specific challenges</li>
-                        <li>• Looking back at past failures shows how far you&apos;ve come</li>
-                    </ul>
-                </div>
             </div>
         </div>
-    );
-}
-
-function LoadingFallback() {
-    return (
-        <div className="min-h-screen py-12 px-4">
-            <div className="mx-auto max-w-2xl">
-                <div className="card animate-pulse">
-                    <div className="h-8 bg-slate/30 rounded w-1/3 mb-4"></div>
-                    <div className="h-4 bg-slate/30 rounded w-2/3 mb-8"></div>
-                    <div className="space-y-6">
-                        <div className="h-20 bg-slate/30 rounded"></div>
-                        <div className="h-32 bg-slate/30 rounded"></div>
-                        <div className="h-20 bg-slate/30 rounded"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default function NewFailureLogPage() {
-    return (
-        <Suspense fallback={<LoadingFallback />}>
-            <NewFailureLogForm />
-        </Suspense>
     );
 }
