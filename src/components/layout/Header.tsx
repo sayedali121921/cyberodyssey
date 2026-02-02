@@ -35,7 +35,7 @@ export default function Header({ user }: HeaderProps) {
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 group">
                     <img
-                        src="/logo.png"
+                        src="/logo.png?v=2"
                         alt="Cyberodyssey Logo"
                         className="w-10 h-10 rounded-xl shadow-lg shadow-cyan/30 group-hover:shadow-cyan/50 transition-shadow object-cover"
                     />
@@ -152,13 +152,13 @@ export default function Header({ user }: HeaderProps) {
                                             <span>👤</span> Your Profile
                                         </Link>
                                         <Link
-                                            href={`/profile/${user.username || user.id}`}
+                                            href={`/profile/${user.username || user.id}#projects`}
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
                                         >
                                             <span>📂</span> My Projects
                                         </Link>
                                         <Link
-                                            href={`/profile/${user.username || user.id}`}
+                                            href={`/profile/${user.username || user.id}#logs`}
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-warm-gray hover:text-off-white hover:bg-white/5 transition-all"
                                         >
                                             <span>📝</span> My Logs

@@ -313,6 +313,68 @@ export default async function ProfilePage({ params }: PageProps) {
                         </p>
                     )}
                 </div>
+                {/* Projects List Section */}
+                <div id="projects" className="card mb-8">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-semibold">Projects</h2>
+                        <Link href="/new/project" className="text-sm text-cyan hover:underline">
+                            + New Project
+                        </Link>
+                    </div>
+                    {profile.projects.length > 0 ? (
+                        <div className="grid gap-4">
+                            {profile.projects.map((project: any) => (
+                                <Link
+                                    key={project.id}
+                                    href={`/projects/${project.slug}`}
+                                    className="block p-4 bg-slate/30 rounded-lg hover:bg-slate/50 transition-colors border border-transparent hover:border-cyan/30"
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-medium text-off-white">{project.title}</h3>
+                                        <span className={`text-xs px-2 py-1 rounded-full ${project.status === 'COMPLETED' ? 'bg-success/20 text-success' :
+                                            project.status === 'ABANDONED' ? 'bg-error/20 text-error' :
+                                                'bg-cyan/20 text-cyan'
+                                            }`}>
+                                            {project.status.replace('_', ' ')}
+                                        </span>
+                                    </div>
+                                    <div className="text-xs text-muted-text mt-2">
+                                        Created {new Date(project.created_at).toLocaleDateString()}
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-muted-text italic">No projects yet.</p>
+                    )}
+                </div>
+
+                {/* Failure Logs List Section */}
+                <div id="logs" className="card mb-8">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-semibold">Failure Logs</h2>
+                        <Link href="/new/failure-log" className="text-sm text-warning hover:underline">
+                            + Log Failure
+                        </Link>
+                    </div>
+                    {profile.failure_logs.length > 0 ? (
+                        <div className="grid gap-4">
+                            {profile.failure_logs.map((log: any) => (
+                                <div
+                                    key={log.id}
+                                    className="p-4 bg-slate/30 rounded-lg border-l-2 border-warning"
+                                >
+                                    <h3 className="font-medium text-off-white mb-1">{log.goal}</h3>
+                                    <div className="text-xs text-muted-text">
+                                        Logged {new Date(log.created_at).toLocaleDateString()}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-muted-text italic">No failure logs yet.</p>
+                    )}
+                </div>
             </div>
         </div>
     );
